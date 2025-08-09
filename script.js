@@ -14,19 +14,43 @@ const timelineTrack = document.getElementById('timelineTrack');
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
 const dots = document.querySelectorAll('.dot');
-const galleryItems = document.querySelectorAll('.gallery-item');
-const lightbox = document.getElementById('lightbox');
-const lightboxImage = document.getElementById('lightboxImage');
-const lightboxClose = document.querySelector('.lightbox-close');
-const lightboxPrev = document.getElementById('lightboxPrev');
-const lightboxNext = document.getElementById('lightboxNext');
 
 // State
 let currentSlide = 0;
-let currentGalleryIndex = 0;
 let isPlaying = false;
 const totalSlides = 5;
-const galleryImages = Array.from(galleryItems).map(item => item.dataset.src);
+
+// Array of images for the new gallery
+const shruImages = [
+    './love/Shru/1.jpg',
+    './love/Shru/10.jpg',
+    './love/Shru/11.jpg',
+    './love/Shru/12.JPG',
+    './love/Shru/13.jpg',
+    './love/Shru/14.PNG',
+    './love/Shru/15.jpg',
+    './love/Shru/16.JPG',
+    './love/Shru/17.JPG',
+    './love/Shru/18.jpg',
+    './love/Shru/19.jpg',
+    './love/Shru/2.jpg',
+    './love/Shru/20.JPG',
+    './love/Shru/21.PNG',
+    './love/Shru/22.JPG',
+    './love/Shru/23.PNG',
+    './love/Shru/24.JPG',
+    './love/Shru/25.JPG',
+    './love/Shru/26.jpg',
+    './love/Shru/27.PNG',
+    './love/Shru/3.JPG',
+    './love/Shru/4.PNG',
+    './love/Shru/5.PNG',
+    './love/Shru/6.jpg',
+    './love/Shru/7.JPG',
+    './love/Shru/8.JPG',
+    './love/Shru/9.PNG',
+    './love/Shru/main.JPG'
+];
 
 // Music Control
 musicBtn.addEventListener('click', () => {
@@ -76,6 +100,7 @@ revealLetterBtn.addEventListener('click', () => {
 
 revealGalleryBtn.addEventListener('click', () => {
     revealSection(gallerySection, revealGalleryBtn);
+    startGalleryCycling(); // Start gallery cycling when revealed
 });
 
 revealFinalBtn.addEventListener('click', () => {
@@ -172,75 +197,29 @@ const timelineObserver = new IntersectionObserver((entries) => {
 
 timelineObserver.observe(timelineSection);
 
-// Gallery Lightbox
-function openLightbox(index) {
-    currentGalleryIndex = index;
-    lightboxImage.src = galleryImages[index];
-    lightbox.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-}
+// New Gallery Cycling Logic
+function startGalleryCycling() {
+    const galleryBoxes = document.querySelectorAll('.gallery-box');
+    galleryBoxes.forEach((box, index) => {
+        // Initial sequential image
+        let currentImageIndex = index % shruImages.length; // Start with an image based on box index
+        const imgElement = box.querySelector('.gallery-image');
+        imgElement.src = shruImages[currentImageIndex];
+        imgElement.classList.add('fade-in'); // Show initial image
 
-function closeLightbox() {
-    lightbox.style.display = 'none';
-    document.body.style.overflow = 'auto';
-}
-
-function nextGalleryImage() {
-    currentGalleryIndex = (currentGalleryIndex + 1) % galleryImages.length;
-    lightboxImage.src = galleryImages[currentGalleryIndex];
-}
-
-function prevGalleryImage() {
-    currentGalleryIndex = (currentGalleryIndex - 1 + galleryImages.length) % galleryImages.length;
-    lightboxImage.src = galleryImages[currentGalleryIndex];
-}
-
-// Gallery Event Listeners
-galleryItems.forEach((item, index) => {
-    item.addEventListener('click', () => openLightbox(index));
-});
-
-lightboxClose.addEventListener('click', closeLightbox);
-lightboxNext.addEventListener('click', nextGalleryImage);
-lightboxPrev.addEventListener('click', prevGalleryImage);
-
-// Close lightbox on background click
-lightbox.addEventListener('click', (e) => {
-    if (e.target === lightbox) {
-        closeLightbox();
-    }
-});
-
-// Keyboard navigation for lightbox
-document.addEventListener('keydown', (e) => {
-    if (lightbox.style.display === 'flex') {
-        switch(e.key) {
-            case 'Escape':
-                closeLightbox();
-                break;
-            case 'ArrowLeft':
-                prevGalleryImage();
-                break;
-            case 'ArrowRight':
-                nextGalleryImage();
-                break;
-        }
-    }
-});
-
-// Smooth scrolling for anchor links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
+        // Cycle images with a staggered start
+        setTimeout(() => {
+            setInterval(() => {
+                imgElement.classList.remove('fade-in'); // Start fade-out (by removing class)
+                setTimeout(() => {
+                    currentImageIndex = (currentImageIndex + 1) % shruImages.length;
+                    imgElement.src = shruImages[currentImageIndex];
+                    imgElement.classList.add('fade-in'); // Fade-in new image
+                }, 2000); // Wait for fade-out (2s) before changing src and fading in
+            }, 4000); // Change image every 4 seconds
+        }, index * 500); // Stagger start times by 0.5 seconds per box
     });
-});
+}
 
 // Intersection Observer for animations
 const observerOptions = {
@@ -272,7 +251,7 @@ window.addEventListener('load', () => {
 
 // Preload images for better performance
 function preloadImages() {
-    galleryImages.forEach(src => {
+    shruImages.forEach(src => { // Use shruImages for preloading
         const img = new Image();
         img.src = src;
     });
