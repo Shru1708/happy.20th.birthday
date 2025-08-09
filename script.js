@@ -33,13 +33,13 @@ musicBtn.addEventListener('click', () => {
     if (isPlaying) {
         backgroundMusic.pause();
         musicBtn.innerHTML = '<i class="fas fa-music"></i><span>Play Our Song</span>';
-        musicBtn.style.background = 'var(--gradient-primary)';
+        musicBtn.classList.remove('playing');
     } else {
         backgroundMusic.play().catch(e => {
             console.log('Audio playback failed:', e);
         });
         musicBtn.innerHTML = '<i class="fas fa-pause"></i><span>Pause Music</span>';
-        musicBtn.style.background = 'var(--gradient-secondary)';
+        musicBtn.classList.add('playing');
     }
     isPlaying = !isPlaying;
 });

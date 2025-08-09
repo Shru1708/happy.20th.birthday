@@ -58,12 +58,26 @@ body {
     animation: floatHeart 8s infinite linear;
 }
 
-.heart-1 { left: 10%; animation-delay: 0s; }
-.heart-2 { left: 20%; animation-delay: 2s; }
-.heart-3 { left: 70%; animation-delay: 4s; }
-.heart-4 { left: 80%; animation-delay: 6s; }
-.heart-5 { left: 40%; animation-delay: 1s; }
-.heart-6 { left: 60%; animation-delay: 3s; }
+.heart-1 { left: 10%; animation-delay: 0s; font-size: 24px; }
+.heart-2 { left: 20%; animation-delay: 2s; font-size: 16px; }
+.heart-3 { left: 70%; animation-delay: 4s; font-size: 28px; }
+.heart-4 { left: 80%; animation-delay: 6s; font-size: 18px; }
+.heart-5 { left: 40%; animation-delay: 1s; font-size: 22px; }
+.heart-6 { left: 60%; animation-delay: 3s; font-size: 14px; }
+.heart-7 { left: 5%; animation-delay: 5s; font-size: 26px; }
+.heart-8 { left: 25%; animation-delay: 7s; font-size: 19px; }
+.heart-9 { left: 75%; animation-delay: 1s; font-size: 23px; }
+.heart-10 { left: 85%; animation-delay: 3s; font-size: 17px; }
+.heart-11 { left: 45%; animation-delay: 5s; font-size: 29px; }
+.heart-12 { left: 65%; animation-delay: 7s; font-size: 15px; }
+.heart-13 { left: 15%; animation-delay: 2s; font-size: 21px; }
+.heart-14 { left: 35%; animation-delay: 4s; font-size: 25px; }
+.heart-15 { left: 55%; animation-delay: 6s; font-size: 13px; }
+.heart-16 { left: 95%; animation-delay: 0s; font-size: 27px; }
+.heart-17 { left: 50%; animation-delay: 2s; font-size: 20px; }
+.heart-18 { left: 90%; animation-delay: 4s; font-size: 12px; }
+.heart-19 { left: 30%; animation-delay: 6s; font-size: 30px; }
+.heart-20 { left: 5%; animation-delay: 8s; font-size: 18px; }
 
 @keyframes floatHeart {
     0% {
@@ -141,6 +155,22 @@ body {
     font-weight: 300;
     font-style: italic;
 }
+.heart-pump {
+    display: inline-block;
+    animation: heartPump 1s infinite;
+}
+
+@keyframes heartPump {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.3);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
 
 /* Hero Section */
 .hero {
@@ -160,7 +190,9 @@ body {
     margin-bottom: 40px;
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 20px 40px var(--shadow-medium);
+    border: 0.5px solid #dd73db;
+    box-shadow: 0 0 60px #dd73db;
+    animation: glowing-border 2.0s infinite alternate;
 }
 
 .main-photo {
@@ -168,6 +200,7 @@ body {
     height: 500px;
     object-fit: cover;
     transition: transform 0.3s ease;
+    animation: glowing-photo 2s infinite alternate;
 }
 
 .hero-image:hover .main-photo {
@@ -198,6 +231,11 @@ body {
 }
 
 .music-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
     background: var(--gradient-primary);
     border: none;
     padding: 15px 30px;
@@ -211,12 +249,15 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin: 0 auto;
 }
 
 .music-btn:hover {
-    transform: translateY(-3px);
+    transform: translate(-50%, -50%) scale(1.1);
     box-shadow: 0 12px 35px var(--shadow-medium);
+}
+
+.music-btn.playing {
+    animation: glowing-button 2.0s infinite alternate;
 }
 
 .music-btn i {
@@ -284,6 +325,33 @@ body {
 @keyframes glow {
     0% { box-shadow: 0 10px 30px var(--shadow-light); }
     100% { box-shadow: 0 15px 40px rgba(212, 175, 55, 0.4); }
+}
+
+@keyframes glowing-border {
+    from {
+        box-shadow: 0 0 20px #dd73db;
+    }
+    to {
+        box-shadow: 0 0 40px #dd73db, 0 0 20px #dd73db;
+    }
+}
+
+@keyframes glowing-photo {
+    from {
+        filter: brightness(1);
+    }
+    to {
+        filter: brightness(1.2);
+    }
+}
+
+@keyframes glowing-button {
+    from {
+        box-shadow: 0 0 15px #dd73db;
+    }
+    to {
+        box-shadow: 0 0 40px #dd73db, 0 0 20px #dd73db;
+    }
 }
 
 /* Hidden Section Styles */
@@ -756,7 +824,7 @@ body {
     }
     
     .final-title {
-        font-size: 2rem;
+        font-sze: 2rem;
     }
     
     .birthday-animation {
@@ -767,4 +835,14 @@ body {
         padding: 15px 25px;
         font-size: 1rem;
     }
+
+    .main-photo {
+        height: auto;
+        aspect-ratio: 9 / 14;
+    }
+}
+
+/* Lower music button position */
+.music-btn {
+    top: 65%;
 }
