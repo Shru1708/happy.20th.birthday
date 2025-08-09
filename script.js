@@ -22,35 +22,22 @@ const totalSlides = 5;
 
 // Array of images for the new gallery
 const shruImages = [
-    './love/Shru/1.jpg',
-    './love/Shru/10.jpg',
-    './love/Shru/11.jpg',
-    './love/Shru/12.JPG',
-    './love/Shru/13.jpg',
-    './love/Shru/14.PNG',
-    './love/Shru/15.jpg',
-    './love/Shru/16.JPG',
-    './love/Shru/17.JPG',
-    './love/Shru/18.jpg',
-    './love/Shru/19.jpg',
-    './love/Shru/2.jpg',
-    './love/Shru/20.JPG',
-    './love/Shru/21.PNG',
-    './love/Shru/22.JPG',
-    './love/Shru/23.PNG',
-    './love/Shru/24.JPG',
-    './love/Shru/25.JPG',
-    './love/Shru/26.jpg',
-    './love/Shru/27.PNG',
-    './love/Shru/3.JPG',
-    './love/Shru/4.PNG',
-    './love/Shru/5.PNG',
-    './love/Shru/6.jpg',
-    './love/Shru/7.JPG',
-    './love/Shru/8.JPG',
-    './love/Shru/9.PNG',
-    './love/Shru/main.JPG'
-];
+    './love/Shru/1.jpg', './love/Shru/2.jpg', './love/Shru/3.JPG', './love/Shru/4.PNG', './love/Shru/5.PNG', './love/Shru/6.jpg',
+    './love/Shru/7.JPG', './love/Shru/8.JPG', './love/Shru/9.PNG', './love/Shru/10.jpg', './love/Shru/11.jpg', './love/Shru/12.JPG',
+    './love/Shru/13.jpg', './love/Shru/14.PNG', './love/Shru/15.jpg', './love/Shru/16.JPG', './love/Shru/17.JPG', './love/Shru/18.jpg',
+    './love/Shru/19.jpg', './love/Shru/20.JPG', './love/Shru/21.PNG', './love/Shru/22.JPG', './love/Shru/23.PNG', './love/Shru/24.JPG',
+    './love/Shru/25.JPG', './love/Shru/26.jpg', './love/Shru/27.PNG', './love/Shru/main.JPG'
+].sort((a, b) => {
+    // Handle 'main.JPG' by placing it at the end
+    if (a.includes('main.JPG') && !b.includes('main.JPG')) return 1;
+    if (b.includes('main.JPG') && !a.includes('main.JPG')) return -1;
+    if (a.includes('main.JPG') && b.includes('main.JPG')) return 0; // Both are main.JPG, keep original order
+
+    // Extract numbers from filenames for sorting for other images
+    const numA = parseInt(a.match(/\d+/)[0]);
+    const numB = parseInt(b.match(/\d+/)[0]);
+    return numA - numB;
+});
 
 // Music Control
 musicBtn.addEventListener('click', () => {
@@ -95,10 +82,12 @@ revealTimelineBtn.addEventListener('click', () => {
 });
 
 revealLetterBtn.addEventListener('click', () => {
+    console.log('revealLetterBtn clicked');
     revealSection(letterSection, revealLetterBtn);
 });
 
 revealGalleryBtn.addEventListener('click', () => {
+    console.log('revealGalleryBtn clicked');
     revealSection(gallerySection, revealGalleryBtn);
     startGalleryCycling(); // Start gallery cycling when revealed
 });
@@ -198,27 +187,47 @@ const timelineObserver = new IntersectionObserver((entries) => {
 timelineObserver.observe(timelineSection);
 
 // New Gallery Cycling Logic
-function startGalleryCycling() {
-    const galleryBoxes = document.querySelectorAll('.gallery-box');
-    galleryBoxes.forEach((box, index) => {
-        // Initial sequential image
-        let currentImageIndex = index % shruImages.length; // Start with an image based on box index
-        const imgElement = box.querySelector('.gallery-image');
-        imgElement.src = shruImages[currentImageIndex];
-        imgElement.classList.add('fade-in'); // Show initial image
+let currentBatchIndex = 0;
+const batchSize = 6;
+const displayDuration = 5000; // 5 seconds
+const animationDuration = 1500; // 2 seconds
 
-        // Cycle images with a staggered start
-        setTimeout(() => {
-            setInterval(() => {
-                imgElement.classList.remove('fade-in'); // Start fade-out (by removing class)
-                setTimeout(() => {
-                    currentImageIndex = (currentImageIndex + 1) % shruImages.length;
-                    imgElement.src = shruImages[currentImageIndex];
-                    imgElement.classList.add('fade-in'); // Fade-in new image
-                }, 2000); // Wait for fade-out (2s) before changing src and fading in
-            }, 4000); // Change image every 4 seconds
-        }, index * 500); // Stagger start times by 0.5 seconds per box
+function displayBatch() {
+    const galleryImages = document.querySelectorAll('.gallery-box .gallery-image');
+    const totalImagesInShru = shruImages.length;
+
+    // Remove fade-in class from all images to start fade-out
+    galleryImages.forEach(img => {
+        img.classList.remove('fade-in');
     });
+
+    // Wait for fade-out to complete before changing images and fading in new ones
+    setTimeout(() => {
+        const startIndex = currentBatchIndex * batchSize;
+
+        galleryImages.forEach((imgElement, i) => {
+            const imageIndex = startIndex + i;
+            if (imageIndex < totalImagesInShru) {
+                imgElement.src = shruImages[imageIndex];
+                imgElement.classList.add('fade-in');
+            } else {
+                // If there are fewer than 6 images in the last batch, clear the remaining boxes
+                imgElement.src = ''; // Clear image source
+                imgElement.classList.remove('fade-in'); // Ensure it's not visible
+            }
+        });
+
+        currentBatchIndex++;
+        // Loop back to the first batch if all images have been displayed
+        if (startIndex + batchSize >= totalImagesInShru) {
+            currentBatchIndex = 0;
+        }
+    }, animationDuration);
+}
+
+function startGalleryCycling() {
+    displayBatch(); // Display the first batch immediately
+    setInterval(displayBatch, displayDuration); // Then cycle batches every 5 seconds
 }
 
 // Intersection Observer for animations

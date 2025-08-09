@@ -232,7 +232,7 @@ body {
 
 .music-btn {
     position: absolute;
-    top: 50%;
+    top: 65%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1;
@@ -599,7 +599,7 @@ body {
     height: 100%;
     object-fit: cover;
     opacity: 0; /* Start hidden for fade-in */
-    transition: opacity 2s ease-in-out; /* Fade-in animation */
+    transition: opacity 1.5s ease-in-out; /* Fade-in animation */
 }
 
 .gallery-box img.fade-in {
@@ -821,9 +821,11 @@ body {
         height: auto;
         aspect-ratio: 9 / 14;
     }
+
+    .music-btn {
+   
+    top: 10%
+}
 }
 
 /* Lower music button position */
-.music-btn {
-    top: 65%;
-}
