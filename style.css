@@ -592,6 +592,7 @@ body {
     align-items: center;
     justify-content: center;
     background-color: var(--cream); /* Placeholder background */
+    aspect-ratio: 2 / 4;
 }
 
 .gallery-box img {
@@ -695,6 +696,84 @@ body {
     font-style: italic;
 }
 
+/* Final Surprise Section */
+.final-section {
+    padding: 100px 0;
+    background: var(--gradient-secondary);
+    text-align: center;
+    position: relative;
+    z-index: 10;
+    overflow: hidden;
+}
+
+.final-content {
+    max-width: 700px;
+    margin: 0 auto;
+    background: var(--soft-white);
+    padding: 60px 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 50px var(--shadow-medium);
+    position: relative;
+    z-index: 2;
+}
+
+.final-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: 3rem;
+    color: var(--accent-gold);
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 3px var(--shadow-light);
+}
+
+.birthday-animation {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    animation: cake-bounce 1.5s infinite;
+}
+
+@keyframes cake-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+.final-message {
+    font-size: 1.1rem;
+    color: var(--text-light);
+    line-height: 1.7;
+    margin-bottom: 30px;
+}
+
+.confetti-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: var(--primary-pink);
+    border-radius: 50%;
+    opacity: 0;
+    animation: confetti-fall 3s ease-out infinite;
+}
+
+@keyframes confetti-fall {
+    0% {
+        transform: translateY(-100%) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .header-title {
@@ -766,13 +845,33 @@ body {
     }
 }
 
+@media (orientation: landscape) {
+    .photo-gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        grid-template-rows: 1fr;
+        gap: 5px; /* Reduced gap for landscape */
+        margin-top: 20px; /* Adjusted margin */
+        overflow-x: auto; /* Enable horizontal scrolling if needed */
+    }
+
+    .gallery-section {
+        padding: 10px 0; /* Reduced padding for landscape */
+    }
+
+    .gallery-box {
+        width: auto; /* Let grid handle width */
+        height: auto; /* Let grid handle height */
+    }
+}
+
 @media (max-width: 480px) {
     .container {
         padding: 0 15px;
     }
     
     .header {
-        padding: 40px 0;
+        padding: 20px 0;
     }
     
     .header-title {
@@ -819,13 +918,15 @@ body {
 
     .main-photo {
         height: auto;
-        aspect-ratio: 9 / 14;
+        aspect-ratio: 9 / 12;
     }
 
     .music-btn {
    
-    top: 10%
+    top: 15%;
 }
+
 }
 
 /* Lower music button position */
+

@@ -26,7 +26,7 @@ const shruImages = [
     './love/Shru/7.JPG', './love/Shru/8.JPG', './love/Shru/9.PNG', './love/Shru/10.jpg', './love/Shru/11.jpg', './love/Shru/12.JPG',
     './love/Shru/13.jpg', './love/Shru/14.PNG', './love/Shru/15.jpg', './love/Shru/16.JPG', './love/Shru/17.JPG', './love/Shru/18.jpg',
     './love/Shru/19.jpg', './love/Shru/20.JPG', './love/Shru/21.PNG', './love/Shru/22.JPG', './love/Shru/23.PNG', './love/Shru/24.JPG',
-    './love/Shru/25.JPG', './love/Shru/26.jpg', './love/Shru/27.PNG', './love/Shru/main.JPG'
+    './love/Shru/25.JPG', './love/Shru/26.jpg', './love/Shru/27.PNG', './love/Shru/main.JPG', './love/Shru/30.JPG', './love/Shru/31.PNG'
 ].sort((a, b) => {
     // Handle 'main.JPG' by placing it at the end
     if (a.includes('main.JPG') && !b.includes('main.JPG')) return 1;
@@ -40,29 +40,36 @@ const shruImages = [
 });
 
 // Music Control
-musicBtn.addEventListener('click', () => {
-    if (isPlaying) {
-        backgroundMusic.pause();
-        musicBtn.innerHTML = '<i class="fas fa-music"></i><span>Play Our Song</span>';
-        musicBtn.classList.remove('playing');
-    } else {
-        backgroundMusic.play().catch(e => {
-            console.log('Audio playback failed:', e);
-        });
-        musicBtn.innerHTML = '<i class="fas fa-pause"></i><span>Pause Music</span>';
-        musicBtn.classList.add('playing');
-    }
-    isPlaying = !isPlaying;
-});
+if (musicBtn) {
+    musicBtn.addEventListener('click', () => {
+        if (isPlaying) {
+            backgroundMusic.pause();
+            musicBtn.innerHTML = '<i class="fas fa-music"></i><span>Play Our Song</span>';
+            musicBtn.classList.remove('playing');
+        } else {
+            backgroundMusic.play().catch(e => {
+                console.log('Audio playback failed:', e);
+            });
+            musicBtn.innerHTML = '<i class="fas fa-pause"></i><span>Pause Music</span>';
+            musicBtn.classList.add('playing');
+        }
+        isPlaying = !isPlaying;
+    });
+}
 
 // Progressive Section Reveal
 function revealSection(section, button) {
     // Hide the button with animation
-    button.style.transform = 'translateY(-20px)';
-    button.style.opacity = '0';
+    if (button) {
+        button.style.transform = 'translateY(-20px)';
+        button.style.opacity = '0';
+        
+        setTimeout(() => {
+            button.style.display = 'none';
+        }, 300);
+    }
     
-    setTimeout(() => {
-        button.style.display = 'none';
+    if (section) {
         section.classList.remove('hidden');
         section.classList.add('section-reveal');
         
@@ -73,58 +80,71 @@ function revealSection(section, button) {
                 block: 'start' 
             });
         }, 300);
-    }, 300);
+    }
 }
 
 // Section Reveal Event Listeners
-revealTimelineBtn.addEventListener('click', () => {
-    revealSection(timelineSection, revealTimelineBtn);
-});
+if (revealTimelineBtn) {
+    revealTimelineBtn.addEventListener('click', () => {
+        if (timelineSection) {
+            revealSection(timelineSection, revealTimelineBtn);
+        }
+    });
+}
 
-revealLetterBtn.addEventListener('click', () => {
-    console.log('revealLetterBtn clicked');
-    revealSection(letterSection, revealLetterBtn);
-});
+if (revealLetterBtn) {
+    revealLetterBtn.addEventListener('click', () => {
+        console.log('revealLetterBtn clicked');
+        if (letterSection) {
+            revealSection(letterSection, revealLetterBtn);
+        }
+    });
+}
 
-revealGalleryBtn.addEventListener('click', () => {
-    console.log('revealGalleryBtn clicked');
-    revealSection(gallerySection, revealGalleryBtn);
-    startGalleryCycling(); // Start gallery cycling when revealed
-});
+if (revealGalleryBtn) {
+    revealGalleryBtn.addEventListener('click', () => {
+        console.log('revealGalleryBtn clicked');
+        if (gallerySection) {
+            revealSection(gallerySection, revealGalleryBtn);
+            startGalleryCycling(); // Start gallery cycling when revealed
+        }
+    });
+}
 
-revealFinalBtn.addEventListener('click', () => {
-    revealSection(finalSection, revealFinalBtn);
-    // Trigger confetti animation
-    setTimeout(createConfetti, 500);
-});
+if (revealFinalBtn) {
+    revealFinalBtn.addEventListener('click', () => {
+        if (finalSection) {
+            revealSection(finalSection, revealFinalBtn);
+            // Trigger confetti animation
+            setTimeout(createConfetti, 500);
+        }
+    });
+}
 
 // Confetti Animation
 function createConfetti() {
+    if (!confettiContainer) return;
     const colors = ['#ffc1cc', '#ffb3ba', '#e6e6fa', '#ffd1dc', '#d4af37'];
     
     for (let i = 0; i < 50; i++) {
-        setTimeout(() => {
+        
             const confetti = document.createElement('div');
             confetti.className = 'confetti';
             confetti.style.left = Math.random() * 100 + '%';
             confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-            confetti.style.animationDelay = Math.random() * 2 + 's';
-            confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            confetti.style.animationDelay = Math.random() * 5 + 's';
+        confetti.style.animationDuration = (Math.random() * 5 + 5) + 's';
+        
             
             confettiContainer.appendChild(confetti);
             
-            // Remove confetti after animation
-            setTimeout(() => {
-                if (confetti.parentNode) {
-                    confetti.parentNode.removeChild(confetti);
-                }
-            }, 5000);
-        }, i * 100);
+            
     }
 }
 
 // Timeline Carousel
 function updateTimeline() {
+    if (!timelineTrack || !dots) return;
     const translateX = -currentSlide * 100;
     timelineTrack.style.transform = `translateX(${translateX}%)`;
     
@@ -153,13 +173,16 @@ function goToSlide(index) {
 if (nextBtn) nextBtn.addEventListener('click', nextSlide);
 if (prevBtn) prevBtn.addEventListener('click', prevSlide);
 
-dots.forEach((dot, index) => {
-    dot.addEventListener('click', () => goToSlide(index));
-});
+if (dots) {
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => goToSlide(index));
+    });
+}
 
 // Auto-play timeline (only when timeline is visible)
 let timelineInterval;
 function startTimelineAutoplay() {
+    if (!timelineSection) return;
     timelineInterval = setInterval(() => {
         if (!timelineSection.classList.contains('hidden')) {
             nextSlide();
@@ -174,17 +197,19 @@ function stopTimelineAutoplay() {
 }
 
 // Start autoplay when timeline is revealed
-const timelineObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            startTimelineAutoplay();
-        } else {
-            stopTimelineAutoplay();
-        }
+if (timelineSection) {
+    const timelineObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                startTimelineAutoplay();
+            } else {
+                stopTimelineAutoplay();
+            }
+        });
     });
-});
 
-timelineObserver.observe(timelineSection);
+    timelineObserver.observe(timelineSection);
+}
 
 // New Gallery Cycling Logic
 let currentBatchIndex = 0;
@@ -194,6 +219,7 @@ const animationDuration = 1500; // 2 seconds
 
 function displayBatch() {
     const galleryImages = document.querySelectorAll('.gallery-box .gallery-image');
+    if (!galleryImages.length) return;
     const totalImagesInShru = shruImages.length;
 
     // Remove fade-in class from all images to start fade-out
@@ -247,10 +273,12 @@ const observer = new IntersectionObserver((entries) => {
 
 // Observe elements for scroll animations
 document.querySelectorAll('.timeline-section, .love-letter-section, .gallery-section').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(30px)';
-    el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-    observer.observe(el);
+    if (el) {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+        observer.observe(el);
+    }
 });
 
 // Add loading animation
@@ -269,7 +297,7 @@ function preloadImages() {
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     preloadImages();
-    if (!timelineSection.classList.contains('hidden')) {
+    if (timelineSection && !timelineSection.classList.contains('hidden')) {
         updateTimeline();
     }
     
@@ -295,34 +323,36 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Touch/swipe support for mobile
-let touchStartX = 0;
-let touchEndX = 0;
+if (timelineTrack) {
+    let touchStartX = 0;
+    let touchEndX = 0;
 
-function handleSwipe() {
-    const swipeThreshold = 50;
-    const diff = touchStartX - touchEndX;
-    
-    if (Math.abs(diff) > swipeThreshold) {
-        if (diff > 0) {
-            // Swipe left - next slide
-            nextSlide();
-        } else {
-            // Swipe right - previous slide
-            prevSlide();
+    function handleSwipe() {
+        const swipeThreshold = 50;
+        const diff = touchStartX - touchEndX;
+        
+        if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) {
+                // Swipe left - next slide
+                nextSlide();
+            } else {
+                // Swipe right - previous slide
+                prevSlide();
+            }
         }
     }
+
+    timelineTrack.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+
+    timelineTrack.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    });
+
+    // Prevent default touch behavior on timeline
+    timelineTrack.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+    }, { passive: false });
 }
-
-timelineTrack.addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].screenX;
-});
-
-timelineTrack.addEventListener('touchend', (e) => {
-    touchEndX = e.changedTouches[0].screenX;
-    handleSwipe();
-});
-
-// Prevent default touch behavior on timeline
-timelineTrack.addEventListener('touchmove', (e) => {
-    e.preventDefault();
-}, { passive: false });
